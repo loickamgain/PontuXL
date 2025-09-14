@@ -1,0 +1,1070 @@
+/* Enhanced PontuXL Game Styles with Bridge Rotation Support */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+header h1 {
+    font-size: 3rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+main {
+    display: flex;
+    max-width: 1400px;
+    margin: 20px auto;
+    gap: 20px;
+    padding: 0 20px;
+    flex-wrap: wrap;
+}
+
+.game-container {
+    flex: 2;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    min-width: 600px;
+}
+
+.chat-container {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    min-width: 350px;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.player-turn h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+#current-player {
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-status {
+    margin-top: 15px;
+}
+
+#game-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #3498db;
+}
+
+/* Game Board Styles */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 2px;
+    width: 480px;
+    height: 480px;
+    margin: 0 auto 30px;
+    border: 3px solid #34495e;
+    border-radius: 10px;
+    background: #34495e;
+    padding: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cell {
+    background: #ecf0f1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cell:hover {
+    background: #d5dbdb;
+    transform: scale(1.02);
+    border-color: #3498db;
+}
+
+/* Lutin Styles */
+.lutin {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 5;
+    cursor: pointer;
+}
+
+.lutin:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.lutin.selected {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    border-color: #f1c40f;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    50% { box-shadow: 0 0 30px rgba(255, 215, 0, 1); }
+    100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+}
+
+.lutin.green {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.lutin.blue {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.lutin.yellow {
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+}
+
+.lutin.red {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* Bridge Styles */
+.bridge {
+    position: absolute;
+    background: #34495e;
+    transition: all 0.3s ease;
+    z-index: 2;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bridge.clickable {
+    cursor: pointer;
+}
+
+.bridge.clickable:hover {
+    background: #e74c3c;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    z-index: 10;
+}
+
+/* Horizontal Bridges */
+.bridge-horizontal {
+    width: 30px;
+    height: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bridge-horizontal.top {
+    top: -3px;
+}
+
+.bridge-horizontal.bottom {
+    bottom: -3px;
+}
+
+/* Vertical Bridges */
+.bridge-vertical {
+    width: 6px;
+    height: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.bridge-vertical.left {
+    left: -3px;
+}
+
+.bridge-vertical.right {
+    right: -3px;
+}
+
+/* Bridge Rotation Animation */
+.bridge.rotating {
+    animation: rotate90 0.5s ease-in-out;
+}
+
+@keyframes rotate90 {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(45deg) scale(1.2); }
+    100% { transform: rotate(90deg) scale(1); }
+}
+
+/* Bridge States */
+.bridge.removed {
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+}
+
+.bridge.highlighted {
+    background: #f39c12;
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    z-index: 8;
+}
+
+/* Game Controls */
+.game-controls {
+    text-align: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.game-controls button {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#reset-game {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+#reset-game:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
+#help-button {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+#help-button:hover {
+    background: linear-gradient(135deg, #2980b9, #21618c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+}
+
+/* Chat Styles */
+.chat-container h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.chat-messages {
+    flex: 1;
+    border: 2px solid #bdc3c7;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    background: white;
+    margin-bottom: 15px;
+    min-height: 300px;
+    max-height: 400px;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+.bot-message, .user-message {
+    margin-bottom: 15px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    animation: messageAppear 0.3s ease-out;
+}
+
+@keyframes messageAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bot-message {
+    background: linear-gradient(135deg, #ecf0f1, #d5dbdb);
+    color: #2c3e50;
+    margin-right: auto;
+    border-bottom-left-radius: 6px;
+    border: 1px solid #bdc3c7;
+}
+
+.user-message {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #bdc3c7;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#user-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+}
+
+#send-button {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#send-button:hover {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from { opacity: 0; transform: scale(0.8) translateY(-50px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-content h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.modal-content h3 {
+    color: #34495e;
+    margin: 20px 0 10px 0;
+    font-size: 1.3rem;
+}
+
+.modal-content p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.modal-content ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.modal-content li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.modal-content ol {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.modal-content ol li {
+    margin-bottom: 5px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #e74c3c;
+    text-decoration: none;
+}
+
+/* Victory Message Styles */
+.victory-message {
+    animation: victoryAppear 0.5s ease-out;
+}
+
+@keyframes victoryAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.victory-content {
+    animation: victoryBounce 0.6s ease-out;
+}
+
+@keyframes victoryBounce {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    50% { transform: scale(1.05) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Game Phase Indicators */
+.game-info.placement {
+    border-left: 4px solid #f39c12;
+}
+
+.game-info.select {
+    border-left: 4px solid #3498db;
+}
+
+.game-info.move {
+    border-left: 4px solid #2ecc71;
+}
+
+.game-info.bridge_action {
+    border-left: 4px solid #e74c3c;
+}
+
+/* Enhanced Bridge Interaction */
+.bridge.last-used {
+    background: #f39c12;
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+    animation: highlightBridge 2s ease-in-out;
+}
+
+@keyframes highlightBridge {
+    0%, 100% { 
+        background: #f39c12;
+        box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+    }
+    50% { 
+        background: #e67e22;
+        box-shadow: 0 0 25px rgba(243, 156, 18, 1);
+    }
+}
+
+/* Bridge Removal Animation with Wood Color */
+.bridge.removing {
+    animation: bridgeRemoval 1.2s ease-out forwards;
+}
+
+@keyframes bridgeRemoval {
+    0% { 
+        transform: scale(1);
+        opacity: 1;
+        background: linear-gradient(135deg, #8B4513, #A0522D, #CD853F);
+        box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+    }
+    15% { 
+        transform: scale(1.3);
+        background: #e74c3c;
+        box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    }
+    35% { 
+        transform: scale(1.5);
+        background: #c0392b;
+        opacity: 0.9;
+        box-shadow: 0 0 30px rgba(231, 76, 60, 1);
+    }
+    60% { 
+        transform: scale(1.8);
+        background: #a93226;
+        opacity: 0.6;
+        box-shadow: 0 0 40px rgba(231, 76, 60, 0.6);
+    }
+    80% { 
+        transform: scale(2.2);
+        background: #922b21;
+        opacity: 0.3;
+        box-shadow: 0 0 50px rgba(231, 76, 60, 0.3);
+    }
+    100% { 
+        transform: scale(0);
+        opacity: 0;
+        background: #922b21;
+        box-shadow: none;
+    }
+}
+
+/* Bridge Rotation Animation with Wood Color */
+.bridge.rotating {
+    animation: bridgeRotation 1.5s ease-in-out forwards;
+}
+
+@keyframes bridgeRotation {
+    0% { 
+        transform-origin: center center;
+        background: linear-gradient(135deg, #8B4513, #A0522D, #CD853F);
+        box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+    }
+    10% { 
+        background: #f39c12;
+        box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    }
+    25% { 
+        transform: rotate(22.5deg) scale(1.2);
+        background: #e67e22;
+        box-shadow: 0 0 25px rgba(243, 156, 18, 0.8);
+    }
+    50% { 
+        transform: rotate(45deg) scale(1.4);
+        background: #d68910;
+        box-shadow: 0 0 35px rgba(243, 156, 18, 1);
+    }
+    75% { 
+        transform: rotate(67.5deg) scale(1.2);
+        background: #ca6f1e;
+        box-shadow: 0 0 25px rgba(243, 156, 18, 0.8);
+    }
+    90% { 
+        transform: rotate(90deg) scale(1.1);
+        background: #ba4a00;
+        box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    }
+    100% { 
+        transform: rotate(90deg) scale(0);
+        background: #a04000;
+        opacity: 0;
+        box-shadow: none;
+    }
+}
+
+/* Bridge Appear Animation with Wood Color */
+.bridge.appearing {
+    animation: bridgeAppear 1s ease-out forwards;
+}
+
+@keyframes bridgeAppear {
+    0% { 
+        transform: scale(0) rotate(90deg);
+        opacity: 0;
+        background: #f39c12;
+        box-shadow: 0 0 20px rgba(243, 156, 18, 0.8);
+    }
+    20% { 
+        transform: scale(0.3) rotate(70deg);
+        opacity: 0.3;
+        background: #e67e22;
+        box-shadow: 0 0 25px rgba(243, 156, 18, 0.9);
+    }
+    50% { 
+        transform: scale(0.7) rotate(20deg);
+        opacity: 0.7;
+        background: #d68910;
+        box-shadow: 0 0 15px rgba(243, 156, 18, 0.7);
+    }
+    80% { 
+        transform: scale(1.1) rotate(-5deg);
+        opacity: 0.9;
+        background: #b7950b;
+        box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+        background: linear-gradient(135deg, #8B4513, #A0522D, #CD853F);
+        box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+    }
+}
+
+/* Bridge Highlight on Hover During Bridge Action Phase */
+.bridge.clickable:hover {
+    background: #3498db;
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+/* Bridge Pulse Effect During Bridge Action Phase */
+.bridge.actionable {
+    animation: bridgePulse 2s ease-in-out infinite;
+}
+
+@keyframes bridgePulse {
+    0%, 100% { 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+        transform: scale(1.05);
+    }
+}
+
+/* Bridge Selection Glow */
+.bridge.selected {
+    background: #2ecc71;
+    box-shadow: 0 0 25px rgba(46, 204, 113, 0.8);
+    animation: selectedBridgeGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes selectedBridgeGlow {
+    0% { 
+        box-shadow: 0 0 25px rgba(46, 204, 113, 0.8);
+        transform: scale(1.1);
+    }
+    100% { 
+        box-shadow: 0 0 35px rgba(46, 204, 113, 1);
+        transform: scale(1.15);
+    }
+}
+
+/* Bridge Warning Effect (when bridge is about to be affected) */
+.bridge.warning {
+    animation: bridgeWarning 0.8s ease-in-out 3;
+}
+
+@keyframes bridgeWarning {
+    0%, 100% { 
+        background: #34495e;
+        transform: scale(1);
+    }
+    50% { 
+        background: #f1c40f;
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
+    }
+}
+
+/* Particle Effects for Bridge Actions */
+.bridge-particles {
+    position: absolute;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #e74c3c;
+    border-radius: 50%;
+    animation: particleFloat 1.2s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50px);
+    }
+}
+
+.particle.rotation {
+    background: #f39c12;
+    animation: particleRotate 1.5s ease-out forwards;
+}
+
+@keyframes particleRotate {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.2) rotate(360deg);
+    }
+}
+
+/* Bridge Type Indicators */
+.bridge-type-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 15;
+}
+
+/* Bridge State Transitions */
+.bridge {
+    transition: all 0.3s ease;
+}
+
+.bridge:not(.removing):not(.rotating):not(.appearing) {
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Enhanced Bridge Visual Feedback */
+.bridge.about-to-remove {
+    animation: aboutToRemove 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes aboutToRemove {
+    0% { 
+        background: #34495e;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    100% { 
+        background: #e74c3c;
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+        transform: scale(1.1);
+    }
+}
+
+.bridge.about-to-rotate {
+    animation: aboutToRotate 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes aboutToRotate {
+    0% { 
+        background: #34495e;
+        transform: rotate(0deg) scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    100% { 
+        background: #f39c12;
+        transform: rotate(15deg) scale(1.1);
+        box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    }
+}
+
+/* Lutin Movement Animation */
+.lutin.moving {
+    animation: lutinMove 0.8s ease-in-out;
+    z-index: 15;
+}
+
+@keyframes lutinMove {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    50% { 
+        transform: scale(1.3);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.8);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .game-container,
+    .chat-container {
+        width: 100%;
+        max-width: 800px;
+        min-width: unset;
+    }
+    
+    .game-board {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    header p {
+        font-size: 1rem;
+    }
+    
+    .game-container,
+    .chat-container {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .game-board {
+        width: 320px;
+        height: 320px;
+        gap: 1px;
+        padding: 8px;
+    }
+    
+    .lutin {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .bridge-horizontal {
+        width: 20px;
+        height: 4px;
+    }
+    
+    .bridge-vertical {
+        width: 4px;
+        height: 20px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+        width: 95%;
+    }
+    
+    .chat-messages {
+        min-height: 200px;
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-board {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .lutin {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+    }
+    
+    .bridge-horizontal {
+        width: 16px;
+        height: 3px;
+    }
+    
+    .bridge-vertical {
+        width: 3px;
+        height: 16px;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .game-controls button {
+        width: 200px;
+    }
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 40px;
+}
+
+/* Loading and Error States */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.error {
+    background: #e74c3c;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+    animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Accessibility Improvements */
+.lutin:focus,
+.bridge:focus,
+.cell:focus {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .bridge {
+        border: 2px solid #000;
+    }
+    
+    .lutin {
+        border-width: 4px;
+        border-color: #000;
+    }
+    
+    .cell {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .lutin:hover,
+    .bridge:hover,
+    .cell:hover {
+        transform: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .chat-container,
+    .game-controls,
+    header,
+    footer {
+        display: none;
+    }
+    
+    .game-container {
+        box-shadow: none;
+        border: 2px solid black;
+    }
+    
+    .game-board {
+        border: 3px solid black;
+    }
+    
+    .bridge {
+        background: black !important;
+    }
+}
